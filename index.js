@@ -65,20 +65,30 @@ app.get('/mytoys/:email', async (req,res)=>{
   res.send (result);
 })  
 
-app.put('/mytoys/:id', async(req,res)=>{
-  const { id } = req.params.id;
 
-  const filter = {_id: new ObjectId(id)};
-  const updateToyData = req.params.body;
+
+app.patch('/mytoys/:id', async (req, res) => {
+  const { id } = req.params;
+
+  const filter = { _id: new ObjectId(id) };
+  const updateToyData = req.body;
   console.log(updateToyData);
-   const updatDoc ={
-    $set:{
-      price : updateToyData.price,
+  const updatDoc = {
+    $set: {
+     price: updateToyData.price,
+     description:updateToyData.description,
+     available_quantity:updateToyData.available_quantity
     }
-   };
-  const result = await toysCollection.updateOne(filter,updatDoc);
-  res.send(result);
+  };
+
+  try {
+    const result = await toysCollection.updateOne(filter, updatDoc);
+    res.send(result);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
+
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     // console.log("Pinged your deployment. You successfully connected to MongoDB!");
