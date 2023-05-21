@@ -30,7 +30,7 @@ async function run() {
     const toysCollection = client.db('SuperHeroToys').collection('ToysCollection');
 
     app.get('/toys', async (req,res)=>{
-      const cursor = toysCollection.find();
+      const cursor = toysCollection.find().limit(20);
       const result = await cursor.toArray();
       res.send(result);
     })
@@ -67,7 +67,7 @@ app.get('/mytoys/:email', async (req,res)=>{
 
 
 
-app.patch('/mytoys/:id', async (req, res) => {
+app.put('/mytoys/:id', async (req, res) => {
   const { id } = req.params;
 
   const filter = { _id: new ObjectId(id) };
